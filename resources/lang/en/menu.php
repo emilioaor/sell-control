@@ -5,5 +5,8 @@ return [
     'list' => 'List',
     'security' => 'Security',
     'users' => 'Users',
+    'management' => 'Management',
+    'phoneTypes' => 'Phone types',
+    'phoneBrands' => 'Phone brands'
 
 ];

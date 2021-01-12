@@ -26,8 +26,8 @@
                             >
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('name', 'required')">
-                            <strong>{{ t('validation.required', {attribute: 'name'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.required', {attribute: 'name'}) }}</strong>
+                            </span>
                         </div>
 
                         <div class="col-sm-6 col-lg-4 form-group">
@@ -44,16 +44,16 @@
                             >
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email', 'required')">
-                            <strong>{{ t('validation.required', {attribute: 'email'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.required', {attribute: 'email'}) }}</strong>
+                            </span>
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email', 'email')">
-                            <strong>{{ t('validation.email', {attribute: 'email'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.email', {attribute: 'email'}) }}</strong>
+                            </span>
 
                             <span class="invalid-feedback" role="alert" v-if="exists">
-                            <strong>{{ t('validation.unique', {attribute: 'email'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.unique', {attribute: 'email'}) }}</strong>
+                            </span>
                         </div>
 
                         <div class="col-sm-6 col-lg-4 form-group">
@@ -86,12 +86,12 @@
                             >
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('password', 'required')">
-                            <strong>{{ t('validation.required', {attribute: 'password'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.required', {attribute: 'password'}) }}</strong>
+                            </span>
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('password', 'confirmed')">
-                            <strong>{{ t('validation.confirmed', {attribute: 'password'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.confirmed', {attribute: 'password'}) }}</strong>
+                            </span>
                         </div>
 
                         <div class="col-sm-6 col-lg-4 form-group">
@@ -108,12 +108,12 @@
                             >
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('password_confirmation', 'required')">
-                            <strong>{{ t('validation.required', {attribute: 'password_confirmation'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.required', {attribute: 'password_confirmation'}) }}</strong>
+                            </span>
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('password_confirmation', 'confirmed')">
-                            <strong>{{ t('validation.confirmed', {attribute: 'password'}) }}</strong>
-                        </span>
+                                <strong>{{ t('validation.confirmed', {attribute: 'password'}) }}</strong>
+                            </span>
                         </div>
 
                     </div>

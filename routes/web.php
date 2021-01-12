@@ -22,8 +22,12 @@ Auth::routes();
 Route::get('translation/{locale}', 'Controller@translations');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
+
     Route::post('user/exists', 'UserController@exists')->middleware('admin');
     Route::get('user/config', 'UserController@config')->name('user.config')->middleware('auth');
     Route::put('user/config', 'UserController@updateConfig')->name('user.updateConfig')->middleware('auth');
     Route::resource('user', 'UserController')->middleware('admin');
+
+    Route::resource('phone-type', 'PhoneTypeController');
+    Route::resource('phone-brand', 'PhoneBrandController');
 });

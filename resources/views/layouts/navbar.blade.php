@@ -1,19 +1,37 @@
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <!-- Left Side Of Navbar -->
     <ul class="navbar-nav mr-auto">
-        @include('layouts.navbar-item', [
-            'label' => __('menu.users'),
-            'items' => [
-                [
-                    'label' => __('menu.addNew'),
-                    'route' => route('user.create'),
-                ],
-                [
-                    'label' => __('menu.list'),
-                    'route' => route('user.index'),
-                ]
-            ]
-        ])
+        @auth
+            @if(Auth::user()->isAdmin())
+                @include('layouts.navbar-item', [
+                    'label' => __('menu.users'),
+                    'items' => [
+                        [
+                            'label' => __('menu.addNew'),
+                            'route' => route('user.create'),
+                        ],
+                        [
+                            'label' => __('menu.list'),
+                            'route' => route('user.index'),
+                        ]
+                    ]
+                ])
+
+                @include('layouts.navbar-item', [
+                    'label' => __('menu.management'),
+                    'items' => [
+                        [
+                            'label' => __('menu.phoneTypes'),
+                            'route' => route('phone-type.index'),
+                        ],
+                        [
+                            'label' => __('menu.phoneBrands'),
+                            'route' => route('phone-brand.index'),
+                        ]
+                    ]
+                ])
+            @endif
+        @endauth
     </ul>
 
     <!-- Right Side Of Navbar -->
