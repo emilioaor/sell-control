@@ -155,6 +155,9 @@ return [
         'currentPassword' => 'Current password',
         'newPassword' => 'New password',
         'newPasswordConfirmation' => 'New password confirmation',
+        'phone' => 'Phone',
+        'country' => 'Country',
+        'status' => 'Status'
     ],
 
 ];

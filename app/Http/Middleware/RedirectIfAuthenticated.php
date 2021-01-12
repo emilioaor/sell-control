@@ -24,7 +24,7 @@ class RedirectIfAuthenticated
                 return redirect()->route('user.index');
             }
 
-            throw new \Exception('FALTA');
+            return redirect()->route('customer.index');
         }
 
         return $next($request);

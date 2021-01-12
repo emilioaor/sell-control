@@ -7,6 +7,8 @@ return [
     'users' => 'Users',
     'management' => 'Management',
     'phoneTypes' => 'Phone types',
-    'phoneBrands' => 'Phone brands'
+    'phoneBrands' => 'Phone brands',
+    'customers' => 'Customers',
+    'report' => 'Report'
 
 ];

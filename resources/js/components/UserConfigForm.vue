@@ -113,7 +113,7 @@
             sendForm() {
                 this.loading = true;
 
-                ApiService.put('/admin/user/config', this.form).then(res => {
+                ApiService.put('/seller/user/config', this.form).then(res => {
                     if (res.data.success) {
                         location.href = res.data.redirect;
                     }

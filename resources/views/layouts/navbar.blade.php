@@ -2,9 +2,9 @@
     <!-- Left Side Of Navbar -->
     <ul class="navbar-nav mr-auto">
         @auth
-            @if(Auth::user()->isAdmin())
-                @include('layouts.navbar-item', [
+            @include('layouts.navbar-item', [
                     'label' => __('menu.users'),
+                    'show' => Auth::user()->isAdmin(),
                     'items' => [
                         [
                             'label' => __('menu.addNew'),
@@ -17,20 +17,34 @@
                     ]
                 ])
 
-                @include('layouts.navbar-item', [
-                    'label' => __('menu.management'),
-                    'items' => [
-                        [
-                            'label' => __('menu.phoneTypes'),
-                            'route' => route('phone-type.index'),
-                        ],
-                        [
-                            'label' => __('menu.phoneBrands'),
-                            'route' => route('phone-brand.index'),
-                        ]
+            @include('layouts.navbar-item', [
+                'label' => __('menu.management'),
+                'show' => Auth::user()->isAdmin(),
+                'items' => [
+                    [
+                        'label' => __('menu.phoneTypes'),
+                        'route' => route('phone-type.index'),
+                    ],
+                    [
+                        'label' => __('menu.phoneBrands'),
+                        'route' => route('phone-brand.index'),
                     ]
-                ])
-            @endif
+                ]
+            ])
+
+            @include('layouts.navbar-item', [
+                'label' => __('menu.customers'),
+                'items' => [
+                    [
+                        'label' => __('menu.addNew'),
+                        'route' => route('customer.create'),
+                    ],
+                    [
+                        'label' => __('menu.list'),
+                        'route' => route('customer.index'),
+                    ]
+                ]
+            ])
         @endauth
     </ul>
 
