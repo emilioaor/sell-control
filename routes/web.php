@@ -14,9 +14,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('translation/{locale}', 'Controller@translations');
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
+    Route::post('user/exists', 'UserController@exists')->middleware('admin');
+    Route::get('user/config', 'UserController@config')->name('user.config')->middleware('auth');
+    Route::put('user/config', 'UserController@updateConfig')->name('user.updateConfig')->middleware('auth');
+    Route::resource('user', 'UserController')->middleware('admin');
+});

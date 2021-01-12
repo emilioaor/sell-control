@@ -1,0 +1,70 @@
+body {
+    background-color: #696e86;
+}
+
+.navbar-light {
+    //background-color: #b1b4bf;
+    background-color: #444750;
+
+    .navbar-nav {
+        .nav-link {
+            //color: #000;
+            color: #ffffff;
+
+            &:hover, &:focus {
+                color: #555;
+            }
+        }
+
+        .show {
+            .nav-link {
+                //color: #000;
+                color: #ffffff;
+            }
+        }
+    }
+
+    .navbar-brand {
+        //color: #000;
+        color: #ffffff;
+
+        &:hover, &:focus {
+            color: #555;
+        }
+    }
+
+    .dropdown-menu {
+        background-color: #6c757d;
+        a {
+            color: #ffffff;
+        }
+    }
+
+    .dropdown-item {
+        &:hover, &:focus {
+            color: #ffffff;
+            background-color: #6c757d;
+        }
+    }
+}
+
+.sell-control-list {
+    .card-header {
+
+    }
+
+    .page-link {
+        color: #696e86;
+        border-color: #696e86;
+    }
+    .page-item.active {
+        .page-link {
+            background-color: #696e86;
+            border-color: #696e86;
+        }
+    }
+}
+
+.card-body {
+    background-color: #fafafa;
+}

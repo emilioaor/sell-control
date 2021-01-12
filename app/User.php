@@ -2,17 +2,21 @@
 
 namespace App;
 
+use App\Contract\SearchTrait;
 use App\Contract\UuidGeneratorTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
     use UuidGeneratorTrait;
+    use SearchTrait;
 
     /** Roles */
     const ROLE_ADMIN = 'administrator';
@@ -45,6 +49,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $search_fields = [
+        'name', 'email'
+    ];
+
     /**
      * Customers (seller)
      *
@@ -53,5 +61,49 @@ class User extends Authenticatable
     public function customers()
     {
         return $this->hasMany(Customer::class, 'seller_id');
+    }
+
+    /**
+     * Is admin?
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    /**
+     * Is seller?
+     *
+     * @return bool
+     */
+    public function isSeller(): bool
+    {
+        return $this->isAdmin() || $this->role === self::ROLE_SELLER;
+    }
+
+    /**
+     * Roles available
+     *
+     * @return array
+     */
+    public static function rolesAvailable(): array
+    {
+        return [
+            self::ROLE_ADMIN => __(sprintf('role.%s', self::ROLE_ADMIN)),
+            self::ROLE_SELLER => __(sprintf('role.%s', self::ROLE_SELLER)),
+        ];
+    }
+
+    /**
+     * Exclude me from select
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotMe(Builder $query): Builder
+    {
+        return $query->where('id', '<>', Auth::user()->id)->where('email', '<>', 'emilioaor@gmail.com');
     }
 }
