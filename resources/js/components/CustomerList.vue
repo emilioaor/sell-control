@@ -28,11 +28,11 @@
                     <tr v-for="item in items" :key="item.id">
                         <td>{{ item.name }}</td>
                         <td>{{ item.email }}</td>
-                        <td>{{ item.email }}</td>
-                        <td>{{ item.email }}</td>
-                        <td>{{ item.email }}</td>
+                        <td>{{ item.phone }}</td>
+                        <td>{{ item.country.name }}</td>
+                        <td>{{ t('status.' + item.status) }}</td>
                         <td>
-                            <a :href="''" class="btn btn-warning">
+                            <a :href="'/seller/customer/' + item.uuid + '/edit'" class="btn btn-warning">
                                 <i class="fa fa-edit"></i>
                             </a>
                         </td>

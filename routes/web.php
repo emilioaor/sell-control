@@ -36,6 +36,8 @@ Route::group(['prefix' => 'seller', 'middleware' => ['auth']], function () {
     Route::put('user/config', 'UserController@updateConfig')->name('user.updateConfig');
 
     Route::get('country', 'CountryController@index')->name('country.index');
+    Route::get('province/{country}', 'CountryController@provinces')->name('country.province');
+    Route::get('city/{province}', 'CountryController@cities')->name('country.city');
 
     Route::resource('customer', 'CustomerController');
 });

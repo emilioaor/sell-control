@@ -157,7 +157,20 @@ return [
         'newPasswordConfirmation' => 'New password confirmation',
         'phone' => 'Phone',
         'country' => 'Country',
-        'status' => 'Status'
+        'province' => 'Province',
+        'city' => 'City',
+        'status' => 'Status',
+        'store' => 'Store',
+        'distributor' => 'Distributor',
+        'storeQTY' => 'Store qty',
+        'distributorQTY' => 'Distributor qty',
+        'storeSellers' => 'Store sellers',
+        'storeDimension' => 'Store dimension',
+        'observations' => 'Observations',
+        'officeSellers' => 'Office sellers',
+        'streetSellers' => 'Street sellers',
+        'customerQTY' => 'Customer qty',
+        'wholesaler' => 'Wholesaler'
     ],
 
 ];

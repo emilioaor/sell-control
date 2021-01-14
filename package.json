@@ -24,6 +24,10 @@
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10",
         "vee-validate": "~2.0.4",
-        "vuejs-datepicker": "^0.9.29"
+        "vuejs-datepicker": "^0.9.29",
+        "vue-multiselect": "^2.1.6"
+    },
+    "dependencies": {
+
     }
 }

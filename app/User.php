@@ -80,7 +80,7 @@ class User extends Authenticatable
      */
     public function isSeller(): bool
     {
-        return $this->isAdmin() || $this->role === self::ROLE_SELLER;
+        return $this->role === self::ROLE_SELLER;
     }
 
     /**

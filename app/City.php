@@ -2,11 +2,18 @@
 
 namespace App;
 
+use App\Contract\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
+    use SearchTrait;
+
     protected $fillable = ['name', 'iso', 'province_id'];
+
+    protected $search_fields = [
+        'name'
+    ];
 
     /**
      * Province

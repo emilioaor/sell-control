@@ -26,6 +26,15 @@ class Customer extends Model
         'name', 'email', 'phone'
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        if (Auth::user()->isSeller() || true) {
+            $attributes['seller_id'] = Auth::user()->id;
+        }
+
+        parent::__construct($attributes);
+    }
+
     /**
      * Store info
      *
@@ -54,6 +63,16 @@ class Customer extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id')->withTrashed();
+    }
+
+    /**
+     * Country
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
 
     /**
@@ -93,5 +112,66 @@ class Customer extends Model
         }
 
         return $query;
+    }
+
+    /**
+     * Set store
+     *
+     * @param array $data
+     */
+    public function setStore(Array $data)
+    {
+        if ($this->store) {
+            $store = $this->store;
+            $store->fill($data);
+        } else {
+            $store = new Store($data);
+            $store->customer_id = $this->id;
+        }
+        $store->save();
+
+        $store->cities()->sync([]);
+        foreach ($data['locations'] as $location) {
+            $store->cities()->attach($location['city']['id']);
+        }
+    }
+
+    /**
+     * Set wholesaler
+     *
+     * @param array $data
+     */
+    public function setWholesaler(array $data)
+    {
+        if ($this->wholesaler) {
+            $wholesaler = $this->wholesaler;
+            $wholesaler->fill($data);
+        } else {
+            $wholesaler = new Wholesaler($data);
+            $wholesaler->customer_id = $this->id;
+        }
+        $wholesaler->save();
+
+        if ($data['allProvinces']) {
+            $provinceIds = Province::query()->where('country_id', $data['country']['id'])->pluck('id');
+        } else {
+            $provinceIds = array_column($data['provinces'], 'id');
+        }
+
+        $wholesaler->provinces()->sync($provinceIds);
+
+        $phoneTypes = [];
+        foreach ($data['phone_types'] as $phoneType) {
+            $phoneTypes[$phoneType['id']] = ['qty' => $phoneType['qty']];
+        }
+
+        $wholesaler->phoneTypes()->sync($phoneTypes);
+
+        $phoneBrands = [];
+        foreach ($data['phone_brands'] as $phoneBrand) {
+            $phoneBrands[$phoneBrand['id']] = ['qty' => $phoneBrand['qty']];
+        }
+
+        $wholesaler->phoneBrands()->sync($phoneBrands);
     }
 }

@@ -18,5 +18,12 @@ return [
     'print' => 'Print',
     'send_by_email' => 'Send by email',
     'send' => 'Send',
-    'close' => 'Close'
+    'close' => 'Close',
+    'information' => 'Information',
+    'general' => 'General',
+    'salesByType' => 'Sales by type',
+    'salesByBrand' => 'Sales by brand',
+    'coverage' => 'Coverage',
+    'allProvinces' => 'All provinces',
+    'selectProvinces' => 'Select provinces'
 ];

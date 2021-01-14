@@ -30,7 +30,7 @@ class Wholesaler extends Model
      */
     public function provinces()
     {
-        return $this->belongsToMany(Province::class);
+        return $this->belongsToMany(Province::class, 'wholesaler_province');
     }
 
     /**
@@ -40,7 +40,7 @@ class Wholesaler extends Model
      */
     public function phoneTypes()
     {
-        return $this->belongsToMany(PhoneType::class)->withPivot(['qty']);
+        return $this->belongsToMany(PhoneType::class, 'wholesaler_phone_type')->withPivot(['qty']);
     }
 
     /**
@@ -50,6 +50,6 @@ class Wholesaler extends Model
      */
     public function phoneBrands()
     {
-        return $this->belongsToMany(PhoneBrand::class)->withPivot(['qty']);
+        return $this->belongsToMany(PhoneBrand::class, 'wholesaler_phone_brand')->withPivot(['qty']);
     }
 }

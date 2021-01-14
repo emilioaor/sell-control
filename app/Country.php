@@ -24,4 +24,14 @@ class Country extends Model
     {
         return $this->hasMany(Province::class);
     }
+
+    /**
+     * Customers
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }
