@@ -28,7 +28,7 @@ class Customer extends Model
 
     public function __construct(array $attributes = [])
     {
-        if (Auth::user()->isSeller() || true) {
+        if (Auth::check() && Auth::user()->isSeller()) {
             $attributes['seller_id'] = Auth::user()->id;
         }
 

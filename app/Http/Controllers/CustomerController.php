@@ -8,8 +8,10 @@ use App\PhoneType;
 use App\Province;
 use App\Service\AlertService;
 use App\Store;
+use App\User;
 use App\Wholesaler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
@@ -27,8 +29,13 @@ class CustomerController extends Controller
             ->assigned()
             ->search($request->search)
             ->with(['country'])
-            ->paginate()
         ;
+
+        if (Auth::user()->isSeller()) {
+            $customers->where('seller_id', Auth::user()->id);
+        }
+
+        $customers = $customers->paginate();
 
         return view('customer.index', compact('customers'));
     }
@@ -42,8 +49,13 @@ class CustomerController extends Controller
     {
         $phoneTypes = PhoneType::all();
         $phoneBrands = PhoneBrand::all();
+        $sellers = [];
 
-        return view('customer.form', compact('phoneTypes', 'phoneBrands'));
+        if (Auth::user()->isAdmin()) {
+            $sellers = User::query()->notMe()->sellers()->get();
+        }
+
+        return view('customer.form', compact('phoneTypes', 'phoneBrands', 'sellers'));
     }
 
     /**
@@ -107,8 +119,13 @@ class CustomerController extends Controller
             ->firstOrFail();
         $phoneTypes = PhoneType::all();
         $phoneBrands = PhoneBrand::all();
+        $sellers = [];
 
-        return view('customer.form', compact('customer', 'phoneTypes', 'phoneBrands'));
+        if (Auth::user()->isAdmin()) {
+            $sellers = User::query()->notMe()->sellers()->get();
+        }
+
+        return view('customer.form', compact('customer', 'phoneTypes', 'phoneBrands', 'sellers'));
     }
 
     /**

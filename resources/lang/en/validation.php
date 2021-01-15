@@ -164,13 +164,15 @@ return [
         'distributor' => 'Distributor',
         'storeQTY' => 'Store qty',
         'distributorQTY' => 'Distributor qty',
+        'wholesalerQTY' => 'Wholesaler qty',
         'storeSellers' => 'Store sellers',
         'storeDimension' => 'Store dimension',
         'observations' => 'Observations',
         'officeSellers' => 'Office sellers',
         'streetSellers' => 'Street sellers',
         'customerQTY' => 'Customer qty',
-        'wholesaler' => 'Wholesaler'
+        'wholesaler' => 'Wholesaler',
+        'seller' => 'Seller'
     ],
 
 ];

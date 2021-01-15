@@ -106,4 +106,15 @@ class User extends Authenticatable
     {
         return $query->where('id', '<>', Auth::user()->id)->where('email', '<>', 'emilioaor@gmail.com');
     }
+
+    /**
+     * Scope sellers
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeSellers(Builder $query): Builder
+    {
+        return $query->where('role', self::ROLE_SELLER);
+    }
 }

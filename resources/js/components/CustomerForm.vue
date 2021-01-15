@@ -68,6 +68,7 @@
                             >
                                 <option
                                     v-for="(label, value) in statusAvailable"
+                                    v-if="isStatusVisible(value)"
                                     :value="value">
                                     {{ label }}
                                 </option>
@@ -105,7 +106,7 @@
                         </div>
 
                         <div class="col-sm-6 col-md-2 form-group">
-                            <label for="distributorQTY">{{ t('validation.attributes.distributorQTY') }}</label>
+                            <label for="distributorQTY">{{ t('validation.attributes.wholesalerQTY') }}</label>
                             <input
                                 type="number"
                                 min="0"
@@ -119,6 +120,26 @@
 
                             <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('distributorQTY', 'required')">
                                 <strong>{{ t('validation.required', {attribute: 'distributorQTY'}) }}</strong>
+                            </span>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 form-group" v-if="user.role === 'administrator'">
+                            <label for="seller_id">{{ t('validation.attributes.seller') }}</label>
+                            <select
+                                name="seller_id"
+                                id="seller_id"
+                                class="form-control"
+                                v-model="form.seller_id"
+                            >
+                                <option
+                                    v-for="seller in sellers"
+                                    :value="seller.id">
+                                    {{ seller.name }}
+                                </option>
+                            </select>
+
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('seller_id', 'required')">
+                                <strong>{{ t('validation.required', {attribute: 'seller'}) }}</strong>
                             </span>
                         </div>
 
@@ -470,6 +491,14 @@
             editData: {
                 type: Object,
                 required: false
+            },
+            sellers: {
+                type: Array,
+                required: true
+            },
+            user: {
+                type: Object,
+                required: true
             }
         },
 
@@ -562,6 +591,7 @@
                     phone: null,
                     status: 'contact',
                     country_id: null,
+                    seller_id: null,
                     store: {
                         store_sellers: 0,
                         store_dimension: null,
@@ -699,6 +729,26 @@
                 return ApiService.get('/seller/province/' + country.id + '?paginate=false').then((res) => {
                     this.provinces = res.data.data;
                 })
+            },
+
+            isStatusVisible(status) {
+                if (! this.editData) {
+                    return true;
+                }
+
+                if (this.form.status === 'contact' && ['contact', 'prospect', 'active'].indexOf(status) >= 0) {
+                    return true;
+                }
+
+                if (this.form.status === 'prospect' && ['prospect', 'active'].indexOf(status) >= 0) {
+                    return true;
+                }
+
+                if (this.form.status === 'active' && ['active'].indexOf(status) >= 0) {
+                    return true;
+                }
+
+                return false;
             }
         }
     }
