@@ -21,6 +21,7 @@
                         <th>{{ t('validation.attributes.phone') }}</th>
                         <th>{{ t('validation.attributes.country') }}</th>
                         <th :width="items.length ? '' : '1%'">{{ t('validation.attributes.status') }}</th>
+                        <th v-if="user.role === 'administrator'">{{ t('validation.attributes.seller') }}</th>
                         <th width="5%"></th>
                     </tr>
                     </thead>
@@ -29,8 +30,9 @@
                         <td>{{ item.name }}</td>
                         <td>{{ item.email }}</td>
                         <td>{{ item.phone }}</td>
-                        <td>{{ item.country.name }}</td>
+                        <td>{{ item.country ? item.country.name : '' }}</td>
                         <td>{{ t('status.' + item.status) }}</td>
+                        <td v-if="user.role === 'administrator'">{{ item.seller.name }}</td>
                         <td>
                             <a :href="'/seller/customer/' + item.uuid + '/edit'" class="btn btn-warning">
                                 <i class="fa fa-edit"></i>
@@ -59,6 +61,11 @@
             total: {
                 type: Number,
                 required: false
+            },
+
+            user: {
+                type: Object,
+                required: true
             }
         }
     }

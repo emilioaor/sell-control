@@ -28,7 +28,7 @@ class CustomerController extends Controller
             ->orderBy('id', 'desc')
             ->assigned()
             ->search($request->search)
-            ->with(['country'])
+            ->with(['country', 'seller'])
         ;
 
         if (Auth::user()->isSeller()) {

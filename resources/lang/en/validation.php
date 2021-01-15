@@ -172,7 +172,9 @@ return [
         'streetSellers' => 'Street sellers',
         'customerQTY' => 'Customer qty',
         'wholesaler' => 'Wholesaler',
-        'seller' => 'Seller'
+        'seller' => 'Seller',
+        'emailOrPhone' => 'Email or Phone',
+        'storeOrWholesaler' => 'Store or Wholesaler',
     ],
 
 ];

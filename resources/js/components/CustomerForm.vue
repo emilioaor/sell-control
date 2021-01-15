@@ -3,7 +3,14 @@
         <form @submit.prevent="validateForm()">
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-plus"></i> {{ t('form.add') }} {{ t('menu.customers') }}
+                    <template v-if="editData">
+                        <i class="fa fa-edit"></i> {{ t('form.edit') }}
+                    </template>
+                    <template v-else>
+                        <i class="fa fa-plus"></i> {{ t('form.add') }}
+                    </template>
+
+                    {{ t('menu.customers') }}
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -14,11 +21,14 @@
                                 id="name"
                                 name="name"
                                 class="form-control"
-                                :class="{'is-invalid': errors.has('name')}"
+                                :class="{'is-invalid': errors.has('name', 'contact')}"
                                 v-model="form.name"
+                                v-validate
+                                data-vv-rules="required"
+                                data-vv-scope="contact"
                             >
 
-                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('name', 'required')">
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('name', 'required', 'contact')">
                                 <strong>{{ t('validation.required', {attribute: 'name'}) }}</strong>
                             </span>
                         </div>
@@ -30,15 +40,27 @@
                                 id="email"
                                 name="email"
                                 class="form-control"
-                                :class="{'is-invalid': errors.has('email')}"
+                                :class="{
+                                    'is-invalid': (errors.has('email', 'active') && isActive) || (errors.has('email_phone', 'contact') && ! isActive)
+                                }"
                                 v-model="form.email"
+                                v-validate
+                                data-vv-rules="required|email"
+                                data-vv-scope="active"
                             >
 
-                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email', 'required')">
-                                <strong>{{ t('validation.required', {attribute: 'name'}) }}</strong>
-                            </span>
-                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email', 'email')">
+                            <!-- Validate contact info for contact status -->
+                            <input type="hidden" name="email_phone" value="" v-if="!isActive && !form.email && !form.phone" v-validate data-vv-rules="required" data-vv-scope="contact">
+
+
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email', 'required', 'active') && isActive">
                                 <strong>{{ t('validation.required', {attribute: 'email'}) }}</strong>
+                            </span>
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email', 'email', 'active') && isActive">
+                                <strong>{{ t('validation.required', {attribute: 'email'}) }}</strong>
+                            </span>
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email_phone', 'required', 'contact') && !isActive">
+                                <strong>{{ t('validation.required', {attribute: 'emailOrPhone'}) }}</strong>
                             </span>
                         </div>
 
@@ -49,12 +71,18 @@
                                 id="phone"
                                 name="phone"
                                 class="form-control"
-                                :class="{'is-invalid': errors.has('phone')}"
+                                :class="{'is-invalid': (errors.has('phone', 'active') && isActive) || (errors.has('email_phone', 'contact') && ! isActive)}"
                                 v-model="form.phone"
+                                v-validate
+                                data-vv-rules="required"
+                                data-vv-scope="active"
                             >
 
-                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('phone', 'required')">
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('phone', 'required', 'active') && isActive">
                                 <strong>{{ t('validation.required', {attribute: 'phone'}) }}</strong>
+                            </span>
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('email_phone', 'required', 'contact') && !isActive">
+                                <strong>{{ t('validation.required', {attribute: 'emailOrPhone'}) }}</strong>
                             </span>
                         </div>
 
@@ -81,10 +109,14 @@
                                 route="/seller/country"
                                 :description-fields="['name']"
                                 @selectResult="changeCountry($event)"
-                                :input-class="errors.has('country_id') ? 'is-invalid' : ''"
+                                :input-class="errors.has('country_id', 'active') && isActive ? 'is-invalid' : ''"
                                 :value="country ? country.searchDescription : ''"
                                 :read-only="false"
                             ></search-input>
+                            <input type="hidden" name="country_id" v-model="form.country_id" v-validate data-vv-rules="required" data-vv-scope="active">
+                            <span class="invalid-feedback d-block" role="alert" v-if="errors.firstByRule('country_id', 'required', 'active') && isActive">
+                                <strong>{{ t('validation.required', {attribute: 'country'}) }}</strong>
+                            </span>
                         </div>
 
                         <div class="col-sm-6 col-md-2 form-group">
@@ -95,13 +127,21 @@
                                 id="storeQTY"
                                 name="storeQTY"
                                 class="form-control"
-                                :class="{'is-invalid': errors.has('storeQTY')}"
+                                :class="{'is-invalid': isActive && (errors.has('storeQTY', 'active') || errors.has('store_wholesaler', 'active'))}"
                                 v-model="form.store.qty"
                                 @change="changeStoreQTY()"
+                                v-validate
+                                data-vv-rules="required"
+                                data-vv-scope="active"
                             >
 
-                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('storeQTY', 'required')">
+                            <input type="hidden" name="store_wholesaler" value="" v-if="! isNaN(parseInt(form.store.qty)) && ! isNaN(parseInt(form.wholesaler.qty)) && (parseInt(form.store.qty) + parseInt(form.wholesaler.qty)) <= 0" v-validate data-vv-rules="required" data-vv-scope="active">
+
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('storeQTY', 'required', 'active') && isActive">
                                 <strong>{{ t('validation.required', {attribute: 'storeQTY'}) }}</strong>
+                            </span>
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('store_wholesaler', 'required', 'active') && isActive">
+                                <strong>{{ t('validation.required', {attribute: 'storeOrWholesaler'}) }}</strong>
                             </span>
                         </div>
 
@@ -113,13 +153,19 @@
                                 id="distributorQTY"
                                 name="distributorQTY"
                                 class="form-control"
-                                :class="{'is-invalid': errors.has('distributorQTY')}"
+                                :class="{'is-invalid': isActive && (errors.has('distributorQTY', 'active') || errors.has('store_wholesaler', 'active'))}"
                                 v-model="form.wholesaler.qty"
                                 @change="changeWholesalerQTY()"
+                                v-validate
+                                data-vv-rules="required"
+                                data-vv-scope="active"
                             >
 
-                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('distributorQTY', 'required')">
-                                <strong>{{ t('validation.required', {attribute: 'distributorQTY'}) }}</strong>
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('distributorQTY', 'required') && isActive">
+                                <strong>{{ t('validation.required', {attribute: 'wholesalerQTY'}) }}</strong>
+                            </span>
+                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('store_wholesaler', 'required', 'active') && isActive">
+                                <strong>{{ t('validation.required', {attribute: 'storeOrWholesaler'}) }}</strong>
                             </span>
                         </div>
 
@@ -129,7 +175,11 @@
                                 name="seller_id"
                                 id="seller_id"
                                 class="form-control"
+                                :class="{'is-invalid': errors.has('seller_id', 'contact')}"
                                 v-model="form.seller_id"
+                                v-validate
+                                data-vv-rules="required"
+                                data-vv-scope="contact"
                             >
                                 <option
                                     v-for="seller in sellers"
@@ -171,11 +221,14 @@
                                                         id="store_sellers"
                                                         name="store_sellers"
                                                         class="form-control"
-                                                        :class="{'is-invalid': errors.has('store_sellers')}"
+                                                        :class="{'is-invalid': errors.has('store_sellers', 'contact')}"
                                                         v-model="form.store.store_sellers"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="contact"
                                                     >
 
-                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('store_sellers', 'required')">
+                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('store_sellers', 'required', 'contact')">
                                                         <strong>{{ t('validation.required', {attribute: 'storeSellers'}) }}</strong>
                                                     </span>
                                                 </div>
@@ -188,11 +241,14 @@
                                                         id="store_dimension"
                                                         name="store_dimension"
                                                         class="form-control"
-                                                        :class="{'is-invalid': errors.has('store_dimension')}"
+                                                        :class="{'is-invalid': errors.has('store_dimension', 'contact')}"
                                                         v-model="form.store.store_dimension"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="contact"
                                                     >
 
-                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('store_dimension', 'required')">
+                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('store_dimension', 'required', 'contact')">
                                                         <strong>{{ t('validation.required', {attribute: 'storeDimension'}) }}</strong>
                                                     </span>
                                                 </div>
@@ -207,11 +263,14 @@
                                                 id="observations"
                                                 name="observations"
                                                 class="form-control"
-                                                :class="{'is-invalid': errors.has('observations')}"
+                                                :class="{'is-invalid': errors.has('observations', 'contact')}"
                                                 v-model="form.store.observations"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                data-vv-scope="contact"
                                             ></textarea>
 
-                                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('observations', 'required')">
+                                            <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('observations', 'required', 'contact')">
                                                 <strong>{{ t('validation.required', {attribute: 'observations'}) }}</strong>
                                             </span>
                                         </div>
@@ -236,10 +295,15 @@
                                                 route="/seller/country"
                                                 :description-fields="['name']"
                                                 @selectResult="changeStoreCountry($event, current)"
-                                                :input-class="errors.has('country_id') ? 'is-invalid' : ''"
+                                                :input-class="errors.has('country' + current, 'contact') ? 'is-invalid' : ''"
                                                 :value="form.store.locations[current-1].country ? form.store.locations[current-1].country.searchDescription : ''"
                                                 :read-only="false"
                                             ></search-input>
+                                            <input type="hidden" :name="'country' + current" v-if="! form.store.locations[current-1].country" v-validate data-vv-rules="required" data-vv-scope="contact">
+
+                                            <span class="invalid-feedback d-block" role="alert" v-if="errors.firstByRule('country' + current, 'required', 'contact')">
+                                                <strong>{{ t('validation.required', {attribute: 'country'}) }}</strong>
+                                            </span>
                                         </div>
 
                                         <div class="col-sm-6 col-md-3 form-group">
@@ -248,11 +312,16 @@
                                                 :route="'/seller/province/' + (form.store.locations[current-1].country ? form.store.locations[current-1].country.id : '')"
                                                 :description-fields="['name']"
                                                 @selectResult="changeStoreProvince($event, current)"
-                                                :input-class="errors.has('country_id') ? 'is-invalid' : ''"
+                                                :input-class="errors.has('province' + current, 'contact') ? 'is-invalid' : ''"
                                                 :value="form.store.locations[current-1].province ? form.store.locations[current-1].province.searchDescription : ''"
                                                 :read-only="false"
                                                 :disabled="! form.store.locations[current-1].country"
                                             ></search-input>
+                                            <input type="hidden" :name="'province' + current" v-if="! form.store.locations[current-1].province" v-validate data-vv-rules="required" data-vv-scope="contact">
+
+                                            <span class="invalid-feedback d-block" role="alert" v-if="errors.firstByRule('province' + current, 'required', 'contact')">
+                                                <strong>{{ t('validation.required', {attribute: 'province'}) }}</strong>
+                                            </span>
                                         </div>
 
                                         <div class="col-sm-6 col-md-3 form-group">
@@ -261,11 +330,16 @@
                                                 :route="'/seller/city/' + (form.store.locations[current-1].province ? form.store.locations[current-1].province.id : '')"
                                                 :description-fields="['name']"
                                                 @selectResult="changeStoreCity($event, current)"
-                                                :input-class="errors.has('country_id') ? 'is-invalid' : ''"
+                                                :input-class="errors.has('city' + current, 'contact') ? 'is-invalid' : ''"
                                                 :value="form.store.locations[current-1].city ? form.store.locations[current-1].city.searchDescription : ''"
                                                 :read-only="false"
                                                 :disabled="! form.store.locations[current-1].province"
                                             ></search-input>
+                                            <input type="hidden" :name="'city' + current" v-if="! form.store.locations[current-1].city" v-validate data-vv-rules="required" data-vv-scope="contact">
+
+                                            <span class="invalid-feedback d-block" role="alert" v-if="errors.firstByRule('city' + current, 'required', 'contact')">
+                                                <strong>{{ t('validation.required', {attribute: 'city'}) }}</strong>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -296,13 +370,16 @@
                                                         id="office_sellers"
                                                         name="office_sellers"
                                                         class="form-control"
-                                                        :class="{'is-invalid': errors.has('office_sellers')}"
+                                                        :class="{'is-invalid': errors.has('office_sellers', 'contact')}"
                                                         v-model="form.wholesaler.office_sellers"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="contact"
                                                     >
 
-                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('office_sellers', 'required')">
-                                                <strong>{{ t('validation.required', {attribute: 'officeSellers'}) }}</strong>
-                                            </span>
+                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('office_sellers', 'required', 'contact')">
+                                                        <strong>{{ t('validation.required', {attribute: 'officeSellers'}) }}</strong>
+                                                    </span>
                                                 </div>
 
                                                 <div class="col-sm-6 col-md-3 form-group">
@@ -313,13 +390,16 @@
                                                         id="street_sellers"
                                                         name="street_sellers"
                                                         class="form-control"
-                                                        :class="{'is-invalid': errors.has('street_sellers')}"
+                                                        :class="{'is-invalid': errors.has('street_sellers', 'contact')}"
                                                         v-model="form.wholesaler.street_sellers"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="contact"
                                                     >
 
-                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('street_sellers', 'required')">
-                                                <strong>{{ t('validation.required', {attribute: 'streetSellers'}) }}</strong>
-                                            </span>
+                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('street_sellers', 'required', 'contact')">
+                                                        <strong>{{ t('validation.required', {attribute: 'streetSellers'}) }}</strong>
+                                                    </span>
                                                 </div>
 
                                                 <div class="col-sm-6 col-md-3 form-group">
@@ -330,13 +410,16 @@
                                                         id="customer_qty"
                                                         name="customer_qty"
                                                         class="form-control"
-                                                        :class="{'is-invalid': errors.has('customer_qty')}"
+                                                        :class="{'is-invalid': errors.has('customer_qty', 'contact')}"
                                                         v-model="form.wholesaler.customers_qty"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="contact"
                                                     >
 
-                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('customer_qty', 'required')">
-                                                <strong>{{ t('validation.required', {attribute: 'customerQTY'}) }}</strong>
-                                            </span>
+                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('customer_qty', 'required', 'contact')">
+                                                        <strong>{{ t('validation.required', {attribute: 'customerQTY'}) }}</strong>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -354,11 +437,25 @@
                                         <div class="col-md-10 form-group">
                                             <div class="row">
                                                 <div
-                                                    v-for="phoneType in form.wholesaler.phone_types"
+                                                    v-for="(phoneType, i) in form.wholesaler.phone_types"
                                                     class="col-sm-6 col-md-3 form-group"
                                                 >
-                                                    <label for="">{{ phoneType.name }}</label>
-                                                    <input type="number" class="form-control" v-model="phoneType.qty">
+                                                    <label :for="'phone-type' + i">{{ phoneType.name }}</label>
+                                                    <input
+                                                        type="number"
+                                                        :name="'phone-type' + i"
+                                                        :id="'phone-type' + i"
+                                                        class="form-control"
+                                                        :class="{'is-invalid': errors.has('phone-type' + i, 'contact')}"
+                                                        v-model="phoneType.qty"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="contact"
+                                                    >
+
+                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('phone-type' + i, 'required', 'contact')">
+                                                        <strong>{{ t('validation.required', {attribute: phoneType.name}) }}</strong>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -376,11 +473,25 @@
                                         <div class="col-md-10 form-group">
                                             <div class="row">
                                                 <div
-                                                    v-for="phoneBrand in form.wholesaler.phone_brands"
+                                                    v-for="(phoneBrand, i) in form.wholesaler.phone_brands"
                                                     class="col-sm-6 col-md-3 form-group"
                                                 >
-                                                    <label for="">{{ phoneBrand.name }}</label>
-                                                    <input type="number" class="form-control" v-model="phoneBrand.qty">
+                                                    <label :for="'phone-brand' + i">{{ phoneBrand.name }}</label>
+                                                    <input
+                                                        type="number"
+                                                        :name="'phone-brand' + i"
+                                                        :id="'phone-brand' + i"
+                                                        class="form-control"
+                                                        :class="{'is-invalid': errors.has('phone-brand' + i, 'contact')}"
+                                                        v-model="phoneBrand.qty"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="contact"
+                                                    >
+
+                                                    <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('phone-brand' + i, 'required', 'contact')">
+                                                        <strong>{{ t('validation.required', {attribute: phoneBrand.name}) }}</strong>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -403,10 +514,15 @@
                                                         route="/seller/country"
                                                         :description-fields="['name']"
                                                         @selectResult="changeWholesalerCountry($event)"
-                                                        :input-class="errors.has('country_id') ? 'is-invalid' : ''"
+                                                        :input-class="errors.has('countryWholesale', 'contact') ? 'is-invalid' : ''"
                                                         :value="form.wholesaler.country ? form.wholesaler.country.searchDescription : ''"
                                                         :read-only="false"
                                                     ></search-input>
+                                                    <input type="hidden" :name="'countryWholesale'" v-if="! form.wholesaler.country" v-validate data-vv-rules="required" data-vv-scope="contact">
+
+                                                    <span class="invalid-feedback d-block" role="alert" v-if="errors.firstByRule('countryWholesale', 'required', 'contact')">
+                                                        <strong>{{ t('validation.required', {attribute: 'country'}) }}</strong>
+                                                    </span>
                                                 </div>
 
                                                 <div class="col-sm-6 col-lg-3 form-group" v-if="form.wholesaler.country">
@@ -447,6 +563,11 @@
                                                         :loading="provinces.length === 0"
                                                         placeholder=""
                                                     ></vue-multiselect>
+                                                    <input type="hidden" name="wholesalerProvinces" v-if="!form.wholesaler.provinces.length" v-validate data-vv-rules="required" data-vv-scope="contact">
+
+                                                    <span class="invalid-feedback d-block" role="alert" v-if="errors.firstByRule('wholesalerProvinces', 'required', 'contact')">
+                                                        <strong>{{ t('validation.required', {attribute: 'province'}) }}</strong>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -458,7 +579,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button v-if="!loading" class="btn btn-success" @click="validateForm()">
+                    <button v-if="!loading" class="btn btn-success">
                         <i class="fa fa-save"></i>
                         {{ t('form.save') }}
                     </button>
@@ -536,7 +657,7 @@
                     }
                 }
 
-                this.editData.store.cities.forEach(city => {
+                this.form.store.cities.forEach(city => {
                     this.form.store.locations.push({
                         country: {
                             ...city.province.country,
@@ -597,7 +718,8 @@
                         store_dimension: null,
                         observations: null,
                         qty: 0,
-                        locations: []
+                        locations: [],
+                        cities: []
                     },
                     wholesaler: {
                         office_sellers: 0,
@@ -616,7 +738,11 @@
 
         methods: {
             validateForm() {
-                this.sendForm();
+                if (this.form.status === 'contact' || this.form.status === 'prospect') {
+                    this.$validator.validateAll('contact').then(res => res && this.sendForm());
+                } else if (this.form.status === 'active') {
+                    this.$validator.validateScopes().then(res => res && this.sendForm());
+                }
             },
 
             sendForm() {
@@ -736,19 +862,25 @@
                     return true;
                 }
 
-                if (this.form.status === 'contact' && ['contact', 'prospect', 'active'].indexOf(status) >= 0) {
+                if (this.editData.status === 'contact' && ['contact', 'prospect', 'active'].indexOf(status) >= 0) {
                     return true;
                 }
 
-                if (this.form.status === 'prospect' && ['prospect', 'active'].indexOf(status) >= 0) {
+                if (this.editData.status === 'prospect' && ['prospect', 'active'].indexOf(status) >= 0) {
                     return true;
                 }
 
-                if (this.form.status === 'active' && ['active'].indexOf(status) >= 0) {
+                if (this.editData.status === 'active' && ['active'].indexOf(status) >= 0) {
                     return true;
                 }
 
                 return false;
+            }
+        },
+
+        computed: {
+            isActive() {
+                return this.form.status === 'active';
             }
         }
     }
