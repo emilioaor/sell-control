@@ -132,7 +132,9 @@ class Customer extends Model
 
         $store->cities()->sync([]);
         foreach ($data['locations'] as $location) {
-            $store->cities()->attach($location['city']['id']);
+            if (isset($location['city']['id']) && $location['city']['id']) {
+                $store->cities()->attach($location['city']['id']);
+            }
         }
     }
 
@@ -152,7 +154,7 @@ class Customer extends Model
         }
         $wholesaler->save();
 
-        if ($data['allProvinces']) {
+        if ($data['allProvinces'] && isset($data['country']['id']) && $data['country']['id']) {
             $provinceIds = Province::query()->where('country_id', $data['country']['id'])->pluck('id');
         } else {
             $provinceIds = array_column($data['provinces'], 'id');

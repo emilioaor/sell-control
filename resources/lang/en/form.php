@@ -25,5 +25,6 @@ return [
     'salesByBrand' => 'Sales by brand',
     'coverage' => 'Coverage',
     'allProvinces' => 'All provinces',
-    'selectProvinces' => 'Select provinces'
+    'selectProvinces' => 'Select provinces',
+    'noComments' => 'No comments'
 ];
