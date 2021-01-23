@@ -240,6 +240,51 @@
                             </div>
                         </div>
 
+                        <!-- Status history -->
+                        <div class="col-12 form-group card-store" v-if="editData">
+                            <div class="card">
+                                <div class="card-header d-flex pointer" @click="accordion.history = !accordion.history">
+                                    <div class="col-10">
+                                        <i class="fa fa-history"></i>
+                                        {{ t('form.statusHistory') }}
+                                    </div>
+                                    <div class="text-right col-2">
+                                        <i class="fa fa-caret-up" v-if="accordion.history"></i>
+                                        <i class="fa fa-caret-down" v-else></i>
+                                    </div>
+                                </div>
+                                <div class="card-body" v-show="accordion.history">
+
+                                    <div class="row">
+                                        <div class="col-12 form-group" v-for="(history, i) in form.customer_status_histories">
+                                            <hr v-if="i > 0">
+                                            <div class="d-flex flex-wrap align-items-center">
+                                                <span class="d-inline-block bg-danger text-white p-1 rounded mr-sm-2 col-12 col-sm-2 col-lg-1 text-center opacity">
+                                                    <template v-if="i < (form.customer_status_histories.length - 1)">
+                                                        <del>{{ t('status.' + form.customer_status_histories[i + 1].status) }}</del>
+                                                    </template>
+                                                    <template v-else>
+                                                        <del>{{ t('form.new') }}</del>
+                                                    </template>
+                                                </span>
+                                                <i class="fa fa-long-arrow-right d-none d-sm-inline-block text-center"></i>
+                                                <span class="d-inline-block bg-success text-white p-1 rounded ml-sm-2 col-12 col-sm-2 col-lg-1 text-center">
+                                                    {{ t('status.' + history.status) }}
+                                                </span>
+                                                <div class="col-12 col-sm-7 col-lg-8 mt-2 mt-sm-0">
+                                                    {{ t('form.assignedBy') }}:
+                                                    <strong>{{ history.user.name }}</strong>
+
+                                                    {{ t('form.at') }}:
+                                                    <strong>{{ history.created_at|date }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Store -->
                         <div class="col-12 form-group card-store" v-if="showStore">
                             <div class="card">
@@ -821,6 +866,7 @@
                 this.accordion.comments = false;
                 this.accordion.store = false;
                 this.accordion.wholesaler = false;
+                this.accordion.history = false;
             }
         },
 
@@ -839,6 +885,7 @@
                     country_id: null,
                     seller_id: null,
                     customer_observations: [],
+                    customer_status_histories: [],
                     newObservation: null,
                     store: {
                         store_sellers: 0,
@@ -864,7 +911,8 @@
                 accordion: {
                     store: true,
                     wholesaler: true,
-                    comments: true
+                    comments: true,
+                    history: true
                 }
             }
         },
@@ -1081,5 +1129,8 @@
     }
     .pointer {
         cursor: pointer;
+    }
+    .opacity {
+        opacity: 0.7;
     }
 </style>

@@ -96,6 +96,16 @@ class Customer extends Model
     }
 
     /**
+     * Customer status histories
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customerStatusHistories()
+    {
+        return $this->hasMany(CustomerStatusHistory::class)->orderBy('id', 'DESC');
+    }
+
+    /**
      * Status available
      *
      * @return array
@@ -199,5 +209,21 @@ class Customer extends Model
         $customerObservation->observation = $observation;
         $customerObservation->user_id = Auth::user()->id;
         $customerObservation->save();
+    }
+
+    /**
+     * Save change status history
+     */
+    public function changeStatus()
+    {
+        $lastStatus = CustomerStatusHistory::query()->where('customer_id', $this->id)->orderBy('id', 'DESC')->first();
+
+        if (! $lastStatus || $lastStatus->status !== $this->status) {
+            $customerStatusHistory = new CustomerStatusHistory();
+            $customerStatusHistory->customer_id = $this->id;
+            $customerStatusHistory->user_id = Auth::user()->id;
+            $customerStatusHistory->status = $this->status;
+            $customerStatusHistory->save();
+        }
     }
 }

@@ -26,5 +26,9 @@ return [
     'coverage' => 'Coverage',
     'allProvinces' => 'All provinces',
     'selectProvinces' => 'Select provinces',
-    'noComments' => 'No comments'
+    'noComments' => 'No comments',
+    'statusHistory' => 'Status history',
+    'assignedBy' => 'Assigned by',
+    'at' => 'At',
+    'new' => 'New'
 ];
