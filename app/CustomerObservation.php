@@ -9,7 +9,7 @@ class CustomerObservation extends Model
 {
     use UuidGeneratorTrait;
 
-    protected $fillable = ['observation', 'customer_id'];
+    protected $fillable = ['observation', 'customer_id', 'user_id'];
 
     /**
      * Customer
@@ -19,5 +19,15 @@ class CustomerObservation extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class)->withTrashed();
     }
 }

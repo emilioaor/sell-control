@@ -18,6 +18,7 @@ class CreateCustomerObservationsTable extends Migration
             $table->uuid('uuid');
             $table->foreignId('customer_id')->constrained('customers');
             $table->text('observation');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

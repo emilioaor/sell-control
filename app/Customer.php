@@ -197,6 +197,7 @@ class Customer extends Model
         $customerObservation = new CustomerObservation();
         $customerObservation->customer_id = $this->id;
         $customerObservation->observation = $observation;
+        $customerObservation->user_id = Auth::user()->id;
         $customerObservation->save();
     }
 }

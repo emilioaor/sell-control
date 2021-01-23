@@ -64,6 +64,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Customer observations
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customerObservations()
+    {
+        return $this->hasMany(CustomerObservation::class);
+    }
+
+    /**
      * Is admin?
      *
      * @return bool

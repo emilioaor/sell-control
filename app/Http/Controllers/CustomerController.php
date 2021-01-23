@@ -115,7 +115,7 @@ class CustomerController extends Controller
                 'wholesaler.phoneTypes',
                 'wholesaler.phoneBrands',
                 'country',
-                'customerObservations'
+                'customerObservations.user'
             ])
             ->firstOrFail();
         $phoneTypes = PhoneType::all();

@@ -228,7 +228,10 @@
                                         <div class="col-12" v-for="customerObservation in form.customer_observations">
                                             <hr>
                                             <div>
-                                                <small><strong>{{ customerObservation.created_at|date(true) }}</strong></small>
+                                                <small><strong>
+                                                    {{ customerObservation.created_at|date(true) }} -
+                                                    {{ customerObservation.user.name }}
+                                                </strong></small>
                                             </div>
                                             <div v-html="customerObservation.observation.replace(/(?:\r\n|\r|\n)/g, '<br />')"></div>
                                         </div>
