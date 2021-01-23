@@ -114,7 +114,8 @@ class CustomerController extends Controller
                 'wholesaler.provinces.country',
                 'wholesaler.phoneTypes',
                 'wholesaler.phoneBrands',
-                'country'
+                'country',
+                'customerObservations'
             ])
             ->firstOrFail();
         $phoneTypes = PhoneType::all();
@@ -144,6 +145,10 @@ class CustomerController extends Controller
         $customer = Customer::query()->uuid($id)->firstOrFail();
         $customer->fill($data);
         $customer->save();
+
+        if (isset($data['newObservation']) && ! empty($data['newObservation'])) {
+            $customer->addCustomerObservation($data['newObservation']);
+        }
 
         if ($data['store']['qty'] > 0) {
             $customer->setStore($data['store']);

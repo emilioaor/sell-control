@@ -86,6 +86,16 @@ class Customer extends Model
     }
 
     /**
+     * Customer observations
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customerObservations()
+    {
+        return $this->hasMany(CustomerObservation::class)->orderBy('id', 'DESC');
+    }
+
+    /**
      * Status available
      *
      * @return array
@@ -175,5 +185,18 @@ class Customer extends Model
         }
 
         $wholesaler->phoneBrands()->sync($phoneBrands);
+    }
+
+    /**
+     * Add customer observation
+     *
+     * @param string $observation
+     */
+    public function addCustomerObservation(string $observation)
+    {
+        $customerObservation = new CustomerObservation();
+        $customerObservation->customer_id = $this->id;
+        $customerObservation->observation = $observation;
+        $customerObservation->save();
     }
 }

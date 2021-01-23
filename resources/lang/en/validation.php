@@ -176,7 +176,8 @@ return [
         'emailOrPhone' => 'Email or Phone',
         'storeOrWholesaler' => 'Store or Wholesaler',
         'isStore' => 'Is store?',
-        'isWholesaler' => 'Is wholesaler?'
+        'isWholesaler' => 'Is wholesaler?',
+        'newObservation' => 'New observation'
     ],
 
 ];

@@ -11,7 +11,7 @@ class Wholesaler extends Model
     use SoftDeletes;
     use UuidGeneratorTrait;
 
-    protected $fillable = ['customer_id', 'qty', 'office_sellers', 'street_sellers', 'customers_qty'];
+    protected $fillable = ['customer_id', 'qty', 'office_sellers', 'street_sellers', 'customers_qty', 'observations'];
 
     /**
      * Customer

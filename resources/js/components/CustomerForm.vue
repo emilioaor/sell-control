@@ -199,13 +199,58 @@
 
                     <div class="row mt-3">
 
+                        <!-- Comments -->
+                        <div class="col-12 form-group card-store" v-if="editData">
+                            <div class="card">
+                                <div class="card-header d-flex pointer" @click="accordion.comments = !accordion.comments">
+                                    <div class="col-8">
+                                        <i class="fa fa-comment"></i>
+                                        {{ t('validation.attributes.observations') }}
+                                    </div>
+                                    <div class="text-right col-4">
+                                        <i class="fa fa-caret-up" v-if="accordion.comments"></i>
+                                        <i class="fa fa-caret-down" v-else></i>
+                                    </div>
+                                </div>
+                                <div class="card-body" v-show="accordion.comments">
+                                    <div class="row">
+                                        <div class="col-12 form-group">
+                                            <label for="newObservation">{{ t('validation.attributes.newObservation') }}</label>
+                                            <textarea
+                                                name="newObservation"
+                                                id="newObservation"
+                                                cols="30"
+                                                rows="3"
+                                                class="form-control"
+                                                v-model="form.newObservation"
+                                            ></textarea>
+                                        </div>
+                                        <div class="col-12" v-for="customerObservation in form.customer_observations">
+                                            <hr>
+                                            <div>
+                                                <small><strong>{{ customerObservation.created_at|date(true) }}</strong></small>
+                                            </div>
+                                            <div v-html="customerObservation.observation.replace(/(?:\r\n|\r|\n)/g, '<br />')"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Store -->
                         <div class="col-12 form-group card-store" v-if="showStore">
                             <div class="card">
-                                <div class="card-header">
-                                    {{ t('validation.attributes.store') }} {{ t('form.information') }}
+                                <div class="card-header d-flex pointer" @click="accordion.store = !accordion.store">
+                                    <div class="col-8">
+                                        <i class="fa fa-store"></i>
+                                        {{ t('validation.attributes.store') }} {{ t('form.information') }}
+                                    </div>
+                                    <div class="text-right col-4">
+                                        <i class="fa fa-caret-up" v-if="accordion.store"></i>
+                                        <i class="fa fa-caret-down" v-else></i>
+                                    </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" v-show="accordion.store">
                                     <div class="row">
                                         <div class="col-md-2 form-group d-flex align-items-center">
                                             <strong>
@@ -387,10 +432,17 @@
                         <!-- Wholesaler -->
                         <div class="col-12 form-group card-store" v-if="form.wholesaler.qty > 0">
                             <div class="card">
-                                <div class="card-header">
-                                    {{ t('validation.attributes.wholesaler') }} {{ t('form.information') }}
+                                <div class="card-header d-flex pointer" @click="accordion.wholesaler = !accordion.wholesaler">
+                                    <div class="col-8">
+                                        <i class="fa fa-store-alt"></i>
+                                        {{ t('validation.attributes.wholesaler') }} {{ t('form.information') }}
+                                    </div>
+                                    <div class="text-right col-4">
+                                        <i class="fa fa-caret-up" v-if="accordion.wholesaler"></i>
+                                        <i class="fa fa-caret-down" v-else></i>
+                                    </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" v-show="accordion.wholesaler">
                                     <div class="row">
                                         <div class="col-md-2 form-group d-flex align-items-center">
                                             <strong>
@@ -457,6 +509,26 @@
 
                                                     <span class="invalid-feedback" role="alert" v-if="errors.firstByRule('customer_qty', 'required', 'contact')">
                                                         <strong>{{ t('validation.required', {attribute: 'customerQTY'}) }}</strong>
+                                                    </span>
+                                                </div>
+
+                                                <div class="col-md-9 form-group">
+                                                    <label for="observations">{{ t('validation.attributes.observations') }}</label>
+                                                    <textarea
+                                                        cols="30"
+                                                        rows="5"
+                                                        id="wholesaler_observations"
+                                                        name="wholesaler_observations"
+                                                        class="form-control"
+                                                        :class="{'is-invalid': isActive && errors.has('wholesaler_observations', 'active')}"
+                                                        v-model="form.wholesaler.observations"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        data-vv-scope="active"
+                                                    ></textarea>
+
+                                                    <span class="invalid-feedback" role="alert" v-if="isActive && errors.firstByRule('wholesaler_observations', 'required', 'active')">
+                                                        <strong>{{ t('validation.required', {attribute: 'observations'}) }}</strong>
                                                     </span>
                                                 </div>
                                             </div>
@@ -742,6 +814,10 @@
                         this.form.wholesaler.allProvinces = this.provinces.length === this.form.wholesaler.provinces.length;
                     });
                 }
+
+                this.accordion.comments = false;
+                this.accordion.store = false;
+                this.accordion.wholesaler = false;
             }
         },
 
@@ -751,6 +827,7 @@
                 country: null,
                 provinces: [],
                 showStore: false,
+                backupStore: null,
                 form: {
                     name: null,
                     email: null,
@@ -758,6 +835,8 @@
                     status: 'contact',
                     country_id: null,
                     seller_id: null,
+                    customer_observations: [],
+                    newObservation: null,
                     store: {
                         store_sellers: 0,
                         store_dimension: 0,
@@ -770,6 +849,7 @@
                         office_sellers: 0,
                         street_sellers: 0,
                         customers_qty: 0,
+                        observations: 'No comments',
                         qty: 0,
                         phone_types: [],
                         phone_brands: [],
@@ -777,6 +857,11 @@
                         provinces: [],
                         allProvinces: false,
                     }
+                },
+                accordion: {
+                    store: true,
+                    wholesaler: true,
+                    comments: true
                 }
             }
         },
@@ -814,8 +899,19 @@
             },
 
             showStoreInformation() {
-                this.form.store.qty = this.form.store.qty > 0 ? 0 : 1;
                 this.showStore = ! this.showStore;
+
+                if (this.showStore) {
+                    if (this.backupStore) {
+                        this.form.store = {...this.backupStore};
+                    } else {
+                        this.form.store.qty = 1;
+                    }
+                } else {
+                    this.backupStore = {...this.form.store};
+                    this.form.store.qty = 0;
+                }
+
                 this.changeStoreQTY();
             },
 
@@ -979,5 +1075,8 @@
             padding: .3rem .4rem;
             border-radius: 50%;
         }
+    }
+    .pointer {
+        cursor: pointer;
     }
 </style>
