@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\CustomerReminder;
 use App\PhoneBrand;
 use App\PhoneType;
 use App\Province;
@@ -10,6 +11,7 @@ use App\Service\AlertService;
 use App\Store;
 use App\User;
 use App\Wholesaler;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -188,5 +190,26 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Pending reminders
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reminder()
+    {
+        $reminders = CustomerReminder::query()
+            ->join('customers', 'customers.id', '=', 'customer_reminders.customer_id')
+            ->where('date', '>=', Carbon::now()->modify('-1 day'))
+            ->orderBy('date')
+            ->with(['customer.seller'])
+        ;
+
+        if (Auth::user()->isSeller()) {
+            $reminders->where('customers.seller_id', Auth::user()->id);
+        }
+
+        return response()->json(['success' => true, 'data' => $reminders->get(['customer_reminders.*'])]);
     }
 }

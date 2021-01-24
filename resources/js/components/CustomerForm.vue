@@ -275,18 +275,19 @@
                                                 class="form-control"
                                                 name="subject"
                                                 id="subject"
+                                                maxlength="255"
                                                 v-model="form.reminder.subject"
                                             >
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr v-if="form.customer_reminders.length">
                                     <div class="row">
                                         <div
                                             class="col-12"
                                             v-for="reminder in form.customer_reminders"
                                             v-if="(new Date(reminder.date)) >= (new Date())"
                                         >
-                                            {{ reminder.date|date }} -
+                                            <strong>{{ reminder.date|date }}</strong> -
                                             {{ reminder.subject }}
                                         </div>
                                     </div>

@@ -53,6 +53,8 @@ class User extends Authenticatable
         'name', 'email'
     ];
 
+    protected $appends = ['roles'];
+
     /**
      * Customers (seller)
      *
@@ -126,5 +128,18 @@ class User extends Authenticatable
     public function scopeSellers(Builder $query): Builder
     {
         return $query->where('role', self::ROLE_SELLER);
+    }
+
+    /**
+     * Get roles
+     *
+     * @return array
+     */
+    public function getRolesAttribute()
+    {
+        return [
+            self::ROLE_ADMIN => $this->isAdmin(),
+            self::ROLE_SELLER => $this->isSeller(),
+        ];
     }
 }

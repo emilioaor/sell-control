@@ -171,6 +171,7 @@ return [
         'officeSellers' => 'Office sellers',
         'streetSellers' => 'Street sellers',
         'customerQTY' => 'Customer qty',
+        'customer' => 'Customer',
         'wholesaler' => 'Wholesaler',
         'seller' => 'Seller',
         'emailOrPhone' => 'Email or Phone',
@@ -179,7 +180,8 @@ return [
         'isWholesaler' => 'Is wholesaler?',
         'newObservation' => 'New observation',
         'newReminder' => 'New reminder',
-        'subject' => 'Subject'
+        'subject' => 'Subject',
+        'date' => 'Date'
     ],
 
 ];

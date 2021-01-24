@@ -39,5 +39,6 @@ Route::group(['prefix' => 'seller', 'middleware' => ['auth']], function () {
     Route::get('province/{country}', 'CountryController@provinces')->name('country.province');
     Route::get('city/{province}', 'CountryController@cities')->name('country.city');
 
+    Route::get('customer/reminder', 'CustomerController@reminder');
     Route::resource('customer', 'CustomerController');
 });
