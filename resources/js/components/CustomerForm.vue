@@ -264,7 +264,7 @@
                                                 input-class = "form-control date-picker"
                                                 format = "MM/dd/yyyy"
                                                 v-model="form.reminder.date"
-                                                :disabled="{to: new Date()}"
+                                                :disabled="{to: toDate}"
                                                 @input="changeHour()"
                                             ></date-picker>
                                         </div>
@@ -935,6 +935,8 @@
                 this.accordion.wholesaler = false;
                 this.accordion.history = false;
                 this.accordion.reminder = false;
+
+                this.toDate.setDate(this.toDate.getDate() - 1);
             }
         },
 
@@ -945,6 +947,7 @@
                 provinces: [],
                 showStore: false,
                 backupStore: null,
+                toDate: new Date(),
                 form: {
                     name: null,
                     email: null,
