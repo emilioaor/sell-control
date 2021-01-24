@@ -30,7 +30,7 @@
                                 <table v-else class="table table-responsive">
                                     <thead>
                                         <tr>
-                                            <th width="1%">{{ t('validation.attributes.date') }}</th>
+                                            <th width="25%">{{ t('validation.attributes.date') }}</th>
                                             <th>{{ t('validation.attributes.customer') }}</th>
                                             <th v-if="user.roles.administrator">{{ t('validation.attributes.seller') }}</th>
                                             <th>{{ t('validation.attributes.subject') }}</th>
@@ -42,7 +42,7 @@
                                             v-if="(new Date(reminder.date)) > (new Date())"
                                             :class="{'reminder-today': isReminderToday(reminder)}"
                                         >
-                                            <td>{{ reminder.date|date }}</td>
+                                            <td>{{ reminder.date|date(true) }}</td>
                                             <td>
                                                 <a :href="'/seller/customer/' + reminder.customer.uuid + '/edit'">
                                                     {{ reminder.customer.name }}

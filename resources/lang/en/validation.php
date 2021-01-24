@@ -185,7 +185,8 @@ return [
         'startDate' => 'Start date',
         'endDate' => 'End date',
         'sellers' => 'Sellers',
-        'currentStatus' => 'Current status'
+        'currentStatus' => 'Current status',
+        'hour' => 'Hour'
     ],
 
 ];

@@ -256,7 +256,7 @@
                                 <div class="card-body" v-show="accordion.reminder">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 form-group">
-                                            <label>{{ t('validation.attributes.newReminder') }}</label>
+                                            <label>{{ t('validation.attributes.date') }}</label>
                                             <date-picker
                                                 name = "reminder"
                                                 id = "reminder"
@@ -265,10 +265,22 @@
                                                 format = "MM/dd/yyyy"
                                                 v-model="form.reminder.date"
                                                 :disabled="{to: new Date()}"
+                                                @input="changeHour()"
                                             ></date-picker>
                                         </div>
 
-                                        <div class="col-sm-6 col-md-5 form-group">
+                                        <div class="col-sm-6 col-md-3 form-group">
+                                            <label>{{ t('validation.attributes.hour') }}</label>
+                                            <input
+                                                type="time"
+                                                class="form-control"
+                                                @change="changeHour()"
+                                                v-model="form.reminder.time"
+                                                :disabled="! form.reminder.date"
+                                            >
+                                        </div>
+
+                                        <div class="col-md-5 form-group">
                                             <label for="subject">{{ t('validation.attributes.subject') }}</label>
                                             <input
                                                 type="text"
@@ -287,7 +299,7 @@
                                             v-for="reminder in form.customer_reminders"
                                             v-if="(new Date(reminder.date)) >= (new Date())"
                                         >
-                                            <strong>{{ reminder.date|date }}</strong> -
+                                            <strong>{{ reminder.date|date(true) }}</strong> -
                                             {{ reminder.subject }}
                                         </div>
                                     </div>
@@ -966,6 +978,7 @@
                     },
                     reminder: {
                         date: null,
+                        time: null,
                         subject: null
                     }
                 },
@@ -1150,6 +1163,17 @@
                 }
 
                 return false;
+            },
+
+            changeHour(event) {
+                if (this.form.reminder.date && this.form.reminder.time) {
+                    const part = this.form.reminder.time.split(':');
+                    const date = this.form.reminder.date;
+
+                    date.setHours(parseInt(part[0]), parseInt(part[1]), 0);
+
+                    this.form.reminder.date = date;
+                }
             }
         },
 
