@@ -118,7 +118,8 @@ class CustomerController extends Controller
                 'wholesaler.phoneBrands',
                 'country',
                 'customerObservations.user',
-                'customerStatusHistories.user'
+                'customerStatusHistories.user',
+                'customerReminders'
             ])
             ->firstOrFail();
         $phoneTypes = PhoneType::all();
@@ -153,6 +154,10 @@ class CustomerController extends Controller
 
         if (isset($data['newObservation']) && ! empty($data['newObservation'])) {
             $customer->addCustomerObservation($data['newObservation']);
+        }
+
+        if ($data['reminder']['date'] && $data['reminder']['subject']) {
+            $customer->addCustomerReminder($data['reminder']);
         }
 
         if ($data['store']['qty'] > 0) {

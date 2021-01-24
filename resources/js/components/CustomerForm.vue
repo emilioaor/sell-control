@@ -240,45 +240,54 @@
                             </div>
                         </div>
 
-                        <!-- Status history -->
+                        <!-- Reminder -->
                         <div class="col-12 form-group card-store" v-if="editData">
                             <div class="card">
-                                <div class="card-header d-flex pointer" @click="accordion.history = !accordion.history">
-                                    <div class="col-10">
-                                        <i class="fa fa-history"></i>
-                                        {{ t('form.statusHistory') }}
+                                <div class="card-header d-flex pointer" @click="accordion.reminder = !accordion.reminder">
+                                    <div class="col-8">
+                                        <i class="fa fa-calendar"></i>
+                                        {{ t('form.reminder') }}
                                     </div>
-                                    <div class="text-right col-2">
-                                        <i class="fa fa-caret-up" v-if="accordion.history"></i>
+                                    <div class="text-right col-4">
+                                        <i class="fa fa-caret-up" v-if="accordion.reminder"></i>
                                         <i class="fa fa-caret-down" v-else></i>
                                     </div>
                                 </div>
-                                <div class="card-body" v-show="accordion.history">
-
+                                <div class="card-body" v-show="accordion.reminder">
                                     <div class="row">
-                                        <div class="col-12 form-group" v-for="(history, i) in form.customer_status_histories">
-                                            <hr v-if="i > 0">
-                                            <div class="d-flex flex-wrap align-items-center">
-                                                <span class="d-inline-block bg-danger text-white p-1 rounded mr-sm-2 col-12 col-sm-2 col-lg-1 text-center opacity">
-                                                    <template v-if="i < (form.customer_status_histories.length - 1)">
-                                                        <del>{{ t('status.' + form.customer_status_histories[i + 1].status) }}</del>
-                                                    </template>
-                                                    <template v-else>
-                                                        <del>{{ t('form.new') }}</del>
-                                                    </template>
-                                                </span>
-                                                <i class="fa fa-long-arrow-right d-none d-sm-inline-block text-center"></i>
-                                                <span class="d-inline-block bg-success text-white p-1 rounded ml-sm-2 col-12 col-sm-2 col-lg-1 text-center">
-                                                    {{ t('status.' + history.status) }}
-                                                </span>
-                                                <div class="col-12 col-sm-7 col-lg-8 mt-2 mt-sm-0">
-                                                    {{ t('form.assignedBy') }}:
-                                                    <strong>{{ history.user.name }}</strong>
+                                        <div class="col-sm-6 col-md-3 form-group">
+                                            <label>{{ t('validation.attributes.newReminder') }}</label>
+                                            <date-picker
+                                                name = "reminder"
+                                                id = "reminder"
+                                                language="en"
+                                                input-class = "form-control date-picker"
+                                                format = "MM/dd/yyyy"
+                                                v-model="form.reminder.date"
+                                                :disabled="{to: new Date()}"
+                                            ></date-picker>
+                                        </div>
 
-                                                    {{ t('form.at') }}:
-                                                    <strong>{{ history.created_at|date }}</strong>
-                                                </div>
-                                            </div>
+                                        <div class="col-sm-6 col-md-5 form-group">
+                                            <label for="subject">{{ t('validation.attributes.subject') }}</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="subject"
+                                                id="subject"
+                                                v-model="form.reminder.subject"
+                                            >
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div
+                                            class="col-12"
+                                            v-for="reminder in form.customer_reminders"
+                                            v-if="(new Date(reminder.date)) >= (new Date())"
+                                        >
+                                            {{ reminder.date|date }} -
+                                            {{ reminder.subject }}
                                         </div>
                                     </div>
                                 </div>
@@ -734,6 +743,51 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Status history -->
+                        <div class="col-12 form-group card-store" v-if="editData">
+                            <div class="card">
+                                <div class="card-header d-flex pointer" @click="accordion.history = !accordion.history">
+                                    <div class="col-10">
+                                        <i class="fa fa-history"></i>
+                                        {{ t('form.statusHistory') }}
+                                    </div>
+                                    <div class="text-right col-2">
+                                        <i class="fa fa-caret-up" v-if="accordion.history"></i>
+                                        <i class="fa fa-caret-down" v-else></i>
+                                    </div>
+                                </div>
+                                <div class="card-body" v-show="accordion.history">
+
+                                    <div class="row">
+                                        <div class="col-12 form-group" v-for="(history, i) in form.customer_status_histories">
+                                            <hr v-if="i > 0">
+                                            <div class="d-flex flex-wrap align-items-center">
+                                                <span class="d-inline-block bg-danger text-white p-1 rounded mr-sm-2 col-12 col-sm-2 col-lg-1 text-center opacity">
+                                                    <template v-if="i < (form.customer_status_histories.length - 1)">
+                                                        <del>{{ t('status.' + form.customer_status_histories[i + 1].status) }}</del>
+                                                    </template>
+                                                    <template v-else>
+                                                        <del>{{ t('form.new') }}</del>
+                                                    </template>
+                                                </span>
+                                                <i class="fa fa-long-arrow-right d-none d-sm-inline-block text-center"></i>
+                                                <span class="d-inline-block bg-success text-white p-1 rounded ml-sm-2 col-12 col-sm-2 col-lg-1 text-center">
+                                                    {{ t('status.' + history.status) }}
+                                                </span>
+                                                <div class="col-12 col-sm-7 col-lg-8 mt-2 mt-sm-0">
+                                                    {{ t('form.assignedBy') }}:
+                                                    <strong>{{ history.user.name }}</strong>
+
+                                                    {{ t('form.at') }}:
+                                                    <strong>{{ history.created_at|date }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -867,6 +921,7 @@
                 this.accordion.store = false;
                 this.accordion.wholesaler = false;
                 this.accordion.history = false;
+                this.accordion.reminder = false;
             }
         },
 
@@ -886,6 +941,7 @@
                     seller_id: null,
                     customer_observations: [],
                     customer_status_histories: [],
+                    customer_reminders: [],
                     newObservation: null,
                     store: {
                         store_sellers: 0,
@@ -906,13 +962,18 @@
                         country: null,
                         provinces: [],
                         allProvinces: false,
+                    },
+                    reminder: {
+                        date: null,
+                        subject: null
                     }
                 },
                 accordion: {
                     store: true,
                     wholesaler: true,
                     comments: true,
-                    history: true
+                    history: true,
+                    reminder: true
                 }
             }
         },

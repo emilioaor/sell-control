@@ -68,3 +68,7 @@ body {
 .card-body {
     background-color: #fafafa;
 }
+
+.date-picker[readonly] {
+    background-color: #fff;
+}

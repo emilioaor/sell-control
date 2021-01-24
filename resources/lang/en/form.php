@@ -30,5 +30,6 @@ return [
     'statusHistory' => 'Status history',
     'assignedBy' => 'Assigned by',
     'at' => 'At',
-    'new' => 'New'
+    'new' => 'New',
+    'reminder' => 'Reminder'
 ];

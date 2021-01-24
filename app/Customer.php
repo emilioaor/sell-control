@@ -4,6 +4,7 @@ namespace App;
 
 use App\Contract\SearchTrait;
 use App\Contract\UuidGeneratorTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -103,6 +104,19 @@ class Customer extends Model
     public function customerStatusHistories()
     {
         return $this->hasMany(CustomerStatusHistory::class)->orderBy('id', 'DESC');
+    }
+
+    /**
+     * Customer reminders
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customerReminders()
+    {
+        return $this->hasMany(CustomerReminder::class)
+            ->where('date', '>=', (Carbon::now()->modify('-1 day')))
+            ->orderBy('date')
+        ;
     }
 
     /**
@@ -225,5 +239,19 @@ class Customer extends Model
             $customerStatusHistory->status = $this->status;
             $customerStatusHistory->save();
         }
+    }
+
+    /**
+     * Add customer reminder
+     *
+     * @param array $data
+     */
+    public function addCustomerReminder(array $data)
+    {
+        $customerReminder = new CustomerReminder();
+        $customerReminder->customer_id = $this->id;
+        $customerReminder->subject = $data['subject'];
+        $customerReminder->date = $data['date'];
+        $customerReminder->save();
     }
 }
