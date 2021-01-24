@@ -2,6 +2,7 @@
     <li class="nav-item dropdown">
         <a
             class="nav-link dropdown-toggle pointer"
+            id="button-reminder"
             data-toggle="modal"
             data-target="#modalReminder"
             :title="t('form.reminder')"
@@ -78,11 +79,19 @@
             user: {
                 type: Object,
                 required: true
+            },
+            firstLoad: {
+                type: Boolean,
+                required: true
             }
         },
 
         mounted() {
-            this.getReminders();
+            this.getReminders().then(res => {
+                if (this.firstLoad && this.remindersToday.length) {
+                    document.querySelector('#button-reminder').click();
+                }
+            })
         },
 
         data() {
@@ -96,7 +105,7 @@
             getReminders() {
                 this.loading = true;
 
-                ApiService.get('/seller/customer/reminder').then(res => {
+                return ApiService.get('/seller/customer/reminder').then(res => {
 
                     if (res.data.success) {
                         this.reminders = res.data.data;
