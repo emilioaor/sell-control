@@ -4,6 +4,7 @@ namespace App;
 
 use App\Contract\SearchTrait;
 use App\Contract\UuidGeneratorTrait;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;

@@ -181,7 +181,11 @@ return [
         'newObservation' => 'New observation',
         'newReminder' => 'New reminder',
         'subject' => 'Subject',
-        'date' => 'Date'
+        'date' => 'Date',
+        'startDate' => 'Start date',
+        'endDate' => 'End date',
+        'sellers' => 'Sellers',
+        'currentStatus' => 'Current status'
     ],
 
 ];

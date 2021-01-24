@@ -121,8 +121,9 @@
 
                 return this.reminders.filter(reminder => {
                     const date = new Date(reminder.date);
+                    const current = new Date();
 
-                    return date >= start && date <= end;
+                    return date >= current && date >= start && date <= end;
                 });
             }
         }

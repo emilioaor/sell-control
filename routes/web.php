@@ -28,6 +28,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
     Route::resource('phone-type', 'PhoneTypeController');
     Route::resource('phone-brand', 'PhoneBrandController');
+
+    Route::get('customer/report', 'CustomerController@report')->name('customer.report');
+    Route::post('customer/report', 'CustomerController@reportData');
 });
 
 Route::group(['prefix' => 'seller', 'middleware' => ['auth']], function () {

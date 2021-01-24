@@ -42,6 +42,10 @@
                     [
                         'label' => __('menu.list'),
                         'route' => route('customer.index'),
+                    ],
+                    [
+                        'label' => __('menu.report'),
+                        'route' => route('customer.report'),
                     ]
                 ]
             ])

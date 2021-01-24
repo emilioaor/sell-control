@@ -212,4 +212,29 @@ class CustomerController extends Controller
 
         return response()->json(['success' => true, 'data' => $reminders->get(['customer_reminders.*'])]);
     }
+
+    /**
+     * Report
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function report()
+    {
+        $sellers = User::query()->sellers()->get();
+
+        return view('customer.report', compact('sellers'));
+    }
+
+    /**
+     * Report data
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reportData(Request $request)
+    {
+        $report = Customer::query()->report($request->all())->get();
+
+        return response()->json(['success' => true, 'data' => $report]);
+    }
 }

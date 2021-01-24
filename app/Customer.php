@@ -115,7 +115,7 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerReminder::class)
             ->where('date', '>=', (Carbon::now()->modify('-1 day')))
-            ->orderBy('date')
+            ->orderBy('date', 'DESC')
         ;
     }
 
@@ -253,5 +253,36 @@ class Customer extends Model
         $customerReminder->subject = $data['subject'];
         $customerReminder->date = $data['date'];
         $customerReminder->save();
+    }
+
+    /**
+     * Scope report
+     *
+     * @param Builder $query
+     * @param array $data
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeReport(Builder $query, array $data)
+    {
+        $start = new Carbon($data['start']);
+        $end = new Carbon($data['end']);
+        $sellers = $data['sellers'];
+
+        $query
+            ->select(['customers.*'])
+            ->join('customer_status_histories', 'customer_status_histories.customer_id', '=', 'customers.id')
+            ->whereBetween('customer_status_histories.created_at', [$start, $end])
+            ->distinct()
+            ->with(['customerStatusHistories.user', 'seller'])
+            ->orderBy('seller_id')
+            ->orderBy('customers.id')
+        ;
+
+        if ($sellers) {
+            $query->whereIn('seller_id', array_column($sellers, 'id'));
+        }
+
+        return $query;
     }
 }
