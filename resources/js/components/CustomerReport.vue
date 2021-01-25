@@ -75,9 +75,21 @@
                         </div>
                         <div class="card-body">
 
+                            <div>
+                                <span class="bg-warning rounded p-1">
+                                    <strong>{{ t('status.contact') }}: {{ seller.count.contact }}</strong>
+                                </span>
+                                <span class="bg-info rounded p-1">
+                                    <strong>{{ t('status.prospect') }}: {{ seller.count.prospect }}</strong>
+                                </span>
+                                <span class="bg-success rounded p-1">
+                                    <strong>{{ t('status.active') }}: {{ seller.count.active }}</strong>
+                                </span>
+                            </div>
+
                             <div v-for="(customer, i) in seller.customers">
 
-                                <hr v-if="i > 0">
+                                <hr>
 
                                 <div class="row">
                                     <div class="col-sm-6 col-md-auto">
@@ -192,15 +204,22 @@
             groupBySeller(customers) {
                 const sellers = [];
                 let lastSeller = null;
+                let customersBySeller = [];
 
                 customers.forEach(customer => {
 
                     if (customer.seller_id !== lastSeller) {
                         lastSeller = customer.seller_id;
+                        customersBySeller = customers.filter(c => c.seller_id === customer.seller_id);
 
                         sellers.push({
                             ...customer.seller,
-                            customers: customers.filter(c => c.seller_id === customer.seller_id)
+                            customers: customersBySeller,
+                            count: {
+                                contact: customersBySeller.filter(c => c.customer_status_histories[0].status === 'contact').length,
+                                prospect: customersBySeller.filter(c => c.customer_status_histories[0].status === 'prospect').length,
+                                active: customersBySeller.filter(c => c.customer_status_histories[0].status === 'active').length
+                            }
                         })
                     }
                 });
