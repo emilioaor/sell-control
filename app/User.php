@@ -51,7 +51,7 @@ class User extends Authenticatable
     ];
 
     protected $search_fields = [
-        'name', 'email'
+        'name', 'email', 'role'
     ];
 
     protected $appends = ['roles'];

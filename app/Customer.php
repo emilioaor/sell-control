@@ -24,7 +24,7 @@ class Customer extends Model
     protected $fillable = ['name', 'email', 'phone', 'country_id', 'status', 'seller_id'];
 
     protected $search_fields = [
-        'name', 'email', 'phone'
+        'name', 'email', 'phone', 'status',
     ];
 
     public function __construct(array $attributes = [])
