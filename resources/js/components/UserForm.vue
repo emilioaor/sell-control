@@ -63,6 +63,7 @@
                                 id="role"
                                 class="form-control"
                                 v-model="form.role"
+                                :disabled="form.customers.length"
                             >
                                 <option
                                     v-for="(role, value) in rolesAvailable"
@@ -117,6 +118,51 @@
                         </div>
 
                     </div>
+
+                    <div class="row mt-2" v-if="editData && form.customers.length">
+                        <div class="col-12">
+
+                            <div class="card">
+                                <div class="card-header bg-header">
+                                    {{ t('menu.customers') }}
+                                </div>
+                                <div class="card-body">
+
+                                    <table class="table table-responsive">
+                                        <thead>
+                                        <tr>
+                                            <th>{{ t('validation.attributes.name') }}</th>
+                                            <th>{{ t('validation.attributes.country') }}</th>
+                                            <th width="5%" class="px-5 text-center">{{ t('validation.attributes.status') }}</th>
+                                            <th>{{ t('validation.attributes.seller') }}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="customer in form.customers">
+                                            <td>{{ customer.name }}</td>
+                                            <td>{{ customer.country ? customer.country.name : '' }}</td>
+                                            <td class="text-center">{{ t('status.' + customer.status) }}</td>
+                                            <td>
+                                                <select
+                                                    :name="'seller' + customer.id"
+                                                    :id="'seller' + customer.id"
+                                                    class="form-control"
+                                                    v-model="customer.seller_id"
+                                                >
+                                                    <option
+                                                        v-for="seller in sellers"
+                                                        :value="seller.id"
+                                                    >{{ seller.name }}</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button v-if="!loading" class="btn btn-success">
@@ -143,6 +189,10 @@
             editData: {
                 type: Object,
                 required: false
+            },
+            sellers: {
+                type: Array,
+                required: true
             }
         },
 
@@ -161,7 +211,8 @@
                     email: null,
                     role: 'administrator',
                     password: null,
-                    password_confirmation: null
+                    password_confirmation: null,
+                    customers: []
                 }
             }
         },
@@ -211,3 +262,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .bg-header {
+        background-color: #ddd;
+    }
+</style>

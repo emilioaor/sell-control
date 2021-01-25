@@ -74,9 +74,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::query()->uuid($id)->firstOrFail();
+        $user = User::query()->uuid($id)->with(['customers.country'])->firstOrFail();
+        $sellers = User::query()->sellers()->get();
 
-        return view('user.form', compact('user'));
+        return view('user.form', compact('user', 'sellers'));
     }
 
     /**
@@ -96,6 +97,8 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        $user->setCustomers($request->customers);
 
         AlertService::alertSuccess(__('alert.processSuccessfully'));
 

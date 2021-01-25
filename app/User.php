@@ -143,4 +143,16 @@ class User extends Authenticatable
             self::ROLE_SELLER => $this->isSeller(),
         ];
     }
+
+    /**
+     * Set customers
+     *
+     * @param array $customers
+     */
+    public function setCustomers(array $customers)
+    {
+        foreach ($customers as $customer) {
+            Customer::query()->uuid($customer['uuid'])->update(['seller_id' => $customer['seller_id']]);
+        }
+    }
 }
