@@ -128,17 +128,46 @@
                                 </div>
                                 <div class="card-body">
 
+                                    <div class="form-group" v-if="! filter.show">
+                                        <a href="" @click.prevent="filter.show = true">
+                                            <i class="fa fa-filter"></i>
+                                            {{ t('form.showFilters') }}
+                                        </a>
+                                    </div>
+
                                     <table class="table table-responsive">
                                         <thead>
+                                        <tr v-if="filter.show">
+                                            <th>
+                                                <input type="text" class="form-control" v-model="filter.name">
+                                            </th>
+                                            <th>
+                                                <select class="form-control" v-model="filter.country_id">
+                                                    <option :value="null">{{ t('form.all') }}</option>
+                                                    <option
+                                                        v-for="country in countriesInCustomers"
+                                                        :value="country.id">{{ country.name }}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" v-model="filter.status">
+                                                    <option :value="null">{{ t('form.all') }}</option>
+                                                    <option
+                                                        v-for="(label,value) in statusAvailable"
+                                                        :value="value">{{ label }}</option>
+                                                </select>
+                                            </th>
+                                            <th></th>
+                                        </tr>
                                         <tr>
-                                            <th>{{ t('validation.attributes.name') }}</th>
-                                            <th>{{ t('validation.attributes.country') }}</th>
+                                            <th width="40%">{{ t('validation.attributes.name') }}</th>
+                                            <th width="30%">{{ t('validation.attributes.country') }}</th>
                                             <th width="5%" class="px-5 text-center">{{ t('validation.attributes.status') }}</th>
-                                            <th>{{ t('validation.attributes.seller') }}</th>
+                                            <th width="25%">{{ t('validation.attributes.seller') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="customer in form.customers">
+                                        <tr v-for="customer in customersFiltered">
                                             <td>{{ customer.name }}</td>
                                             <td>{{ customer.country ? customer.country.name : '' }}</td>
                                             <td class="text-center">{{ t('status.' + customer.status) }}</td>
@@ -186,6 +215,10 @@
                 type: Object,
                 required: true
             },
+            statusAvailable: {
+                type: Object,
+                required: true
+            },
             editData: {
                 type: Object,
                 required: false
@@ -213,6 +246,12 @@
                     password: null,
                     password_confirmation: null,
                     customers: []
+                },
+                filter: {
+                    show: false,
+                    name: null,
+                    country_id: null,
+                    status: null
                 }
             }
         },
@@ -258,6 +297,39 @@
         watch: {
             "form.email"(value, old) {
                 this.exists = false;
+            }
+        },
+
+        computed: {
+            customersFiltered() {
+                return this.form.customers.filter(customer => {
+
+                    if (this.filter.name && customer.name.toLowerCase().indexOf(this.filter.name.toLowerCase()) === -1) {
+                        return false;
+                    }
+
+                    if (this.filter.country_id && customer.country_id !== this.filter.country_id) {
+                        return false;
+                    }
+
+                    if (this.filter.status && customer.status !== this.filter.status) {
+                        return false;
+                    }
+
+                    return true;
+                });
+            },
+
+            countriesInCustomers() {
+                const countries = [];
+
+                this.form.customers.forEach(customer => {
+                    if (customer.country && ! countries.some(c => c.id === customer.country.id)) {
+                        countries.push({...customer.country})
+                    }
+                })
+
+                return countries;
             }
         }
     }

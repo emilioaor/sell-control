@@ -6,6 +6,7 @@ return [
     'save' => 'Save',
     'delete' => 'Delete',
     'filter' => 'Filter',
+    'showFilters' => 'Show filters',
     'total' => 'Total',
     'filtered_by' => 'Filtered by',
     'confirm' => 'Confirm',
