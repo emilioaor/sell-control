@@ -63,7 +63,7 @@
                                 id="role"
                                 class="form-control"
                                 v-model="form.role"
-                                :disabled="form.customers.length"
+                                :disabled="form.customers.length > 0"
                             >
                                 <option
                                     v-for="(role, value) in rolesAvailable"
