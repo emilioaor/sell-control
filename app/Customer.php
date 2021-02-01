@@ -21,7 +21,7 @@ class Customer extends Model
     const STATUS_PROSPECT = 'prospect';
     const STATUS_ACTIVE = 'active';
 
-    protected $fillable = ['name', 'email', 'phone', 'country_id', 'status', 'seller_id'];
+    protected $fillable = ['name', 'email', 'phone', 'country_id', 'status', 'seller_id', 'contact_name'];
 
     protected $search_fields = [
         'name', 'email', 'phone', 'status',

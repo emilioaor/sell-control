@@ -34,6 +34,25 @@
                         </div>
 
                         <div class="col-sm-6 col-md-4 form-group">
+                            <label for="contact_name">{{ t('validation.attributes.contactName') }}</label>
+                            <input
+                                type="text"
+                                id="contact_name"
+                                name="contact_name"
+                                class="form-control"
+                                :class="{'is-invalid': isActive && errors.has('contact_name', 'active')}"
+                                v-model="form.contact_name"
+                                v-validate
+                                data-vv-rules="required"
+                                data-vv-scope="active"
+                            >
+
+                            <span class="invalid-feedback" role="alert" v-if="isActive && errors.firstByRule('contact_name', 'required', 'active')">
+                                <strong>{{ t('validation.required', {attribute: 'contactName'}) }}</strong>
+                            </span>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 form-group">
                             <label for="name">{{ t('validation.attributes.email') }}</label>
                             <input
                                 type="email"
@@ -950,6 +969,7 @@
                 toDate: new Date(),
                 form: {
                     name: null,
+                    contact_name: null,
                     email: null,
                     phone: null,
                     status: 'contact',
