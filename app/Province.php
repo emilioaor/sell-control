@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Contract\SearchTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Province extends Model
@@ -12,7 +13,8 @@ class Province extends Model
     protected $fillable = ['name', 'country_id'];
 
     protected $search_fields = [
-        'name'
+        'provinces.name',
+        'countries.name'
     ];
 
     /**
@@ -43,5 +45,14 @@ class Province extends Model
     public function wholesalers()
     {
         return $this->belongsToMany(Wholesaler::class);
+    }
+
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        $query
+            ->select(['provinces.*'])
+            ->join('countries', 'countries.id', '=', 'provinces.country_id');
+
+        return $this->_search($query, $search);
     }
 }

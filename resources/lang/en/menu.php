@@ -11,6 +11,7 @@ return [
     'customers' => 'Customers',
     'report' => 'Report',
     'countries' => 'Countries',
-    'addCountry' => 'Add country'
-
+    'addCountry' => 'Add country',
+    'provinces' => 'Provinces',
+    'addProvince' => 'Add province'
 ];

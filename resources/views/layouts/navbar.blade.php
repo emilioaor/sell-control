@@ -36,6 +36,14 @@
                     [
                         'label' => __('menu.countries'),
                         'route' => route('country.index'),
+                    ],
+                    [
+                        'label' => __('menu.addProvince'),
+                        'route' => route('province.create'),
+                    ],
+                    [
+                        'label' => __('menu.provinces'),
+                        'route' => route('province.index'),
                     ]
                 ]
             ])
