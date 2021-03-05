@@ -187,7 +187,8 @@ return [
         'sellers' => 'Sellers',
         'currentStatus' => 'Current status',
         'hour' => 'Hour',
-        'contactName' => 'Contact name'
+        'contactName' => 'Contact name',
+        'iso' => 'ISO'
     ],
 
 ];

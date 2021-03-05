@@ -28,6 +28,14 @@
                     [
                         'label' => __('menu.phoneBrands'),
                         'route' => route('phone-brand.index'),
+                    ],
+                    [
+                        'label' => __('menu.addCountry'),
+                        'route' => route('country.create'),
+                    ],
+                    [
+                        'label' => __('menu.countries'),
+                        'route' => route('country.index'),
                     ]
                 ]
             ])

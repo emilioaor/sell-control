@@ -34,4 +34,14 @@ class Country extends Model
     {
         return $this->hasMany(Customer::class);
     }
+
+    /**
+     * Mutator
+     *
+     * @param $value
+     */
+    public function setIsoAttribute($value)
+    {
+        $this->attributes['iso'] = strtoupper($value);
+    }
 }

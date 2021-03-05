@@ -9,6 +9,8 @@ return [
     'phoneTypes' => 'Phone types',
     'phoneBrands' => 'Phone brands',
     'customers' => 'Customers',
-    'report' => 'Report'
+    'report' => 'Report',
+    'countries' => 'Countries',
+    'addCountry' => 'Add country'
 
 ];
