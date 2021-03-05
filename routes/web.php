@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('country/exists', 'CountryController@exists');
     Route::resource('country', 'CountryController');
     Route::resource('province', 'ProvinceController');
+    Route::resource('city', 'CityController');
 
     Route::get('customer/report', 'CustomerController@report')->name('customer.report');
     Route::post('customer/report', 'CustomerController@reportData');

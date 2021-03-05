@@ -44,6 +44,14 @@
                     [
                         'label' => __('menu.provinces'),
                         'route' => route('province.index'),
+                    ],
+                    [
+                        'label' => __('menu.addCity'),
+                        'route' => route('city.create'),
+                    ],
+                    [
+                        'label' => __('menu.cities'),
+                        'route' => route('city.index'),
                     ]
                 ]
             ])

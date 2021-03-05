@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Contract\SearchTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
@@ -12,7 +13,9 @@ class City extends Model
     protected $fillable = ['name', 'iso', 'province_id'];
 
     protected $search_fields = [
-        'name'
+        'cities.name',
+        'provinces.name',
+        'countries.name'
     ];
 
     /**
@@ -33,5 +36,22 @@ class City extends Model
     public function stores()
     {
         return $this->belongsToMany(Store::class);
+    }
+
+    /**
+     * Search
+     *
+     * @param Builder $query
+     * @param null|string $search
+     * @return Builder
+     */
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        $query
+            ->select(['cities.*'])
+            ->join('provinces', 'provinces.id', '=', 'cities.province_id')
+            ->join('countries', 'countries.id', '=', 'provinces.country_id');
+
+        return $this->_search($query, $search);
     }
 }

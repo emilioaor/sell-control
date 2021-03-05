@@ -13,5 +13,7 @@ return [
     'countries' => 'Countries',
     'addCountry' => 'Add country',
     'provinces' => 'Provinces',
-    'addProvince' => 'Add province'
+    'addProvince' => 'Add province',
+    'cities' => 'Cities',
+    'addCity' => 'Add city'
 ];

@@ -47,6 +47,13 @@ class Province extends Model
         return $this->belongsToMany(Wholesaler::class);
     }
 
+    /**
+     * Search
+     *
+     * @param Builder $query
+     * @param null|string $search
+     * @return Builder
+     */
     public function scopeSearch(Builder $query, ?string $search): Builder
     {
         $query
